@@ -1075,8 +1075,6 @@
           marker.object3D.getWorldScale(this.s);
 
           follower.object3D.position.lerp(this.p, 1);
-          follower.object3D.quaternion.slerp(this.q, 0.025);
-          follower.object3D.scale.lerp(this.s, 0.025);
         },
       });
 
@@ -1150,7 +1148,9 @@
           onclick="reloadPage()"
         />
       </div>
-      <div class="notification-message">AR.js 3.4.7 A-Frame Version: 1.6.0</div>
+      <div class="notification-message">
+        4 AR.js 3.4.7 A-Frame Version: 1.6.0
+      </div>
     </div>
     <a-scene
       embedded
@@ -1164,7 +1164,9 @@
 
       <a-marker
         found="false"
-        preset="hiro"
+        preset="custom"
+        type="pattern"
+        url="marker.patt"
         raycaster="objects: .clickable"
         emitevents="true"
         cursor="fuse: false; rayOrigin: mouse;"
@@ -1177,6 +1179,22 @@
         smoothThreshold="5"
       >
       </a-marker>
+
+      <!-- <a-marker
+        found="false"
+        preset="hiro"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+        markerhandler
+        size="1"
+        smooth="true"
+        smoothCount="5"
+        smoothTolerance="0.05"
+        smoothThreshold="5"
+      >
+      </a-marker> -->
 
       <a-entity id="follower"> </a-entity>
       <a-entity camera></a-entity>

@@ -822,8 +822,8 @@
             entity.setAttribute("infocomponent", "");
             entity.addEventListener("click", () => openModal(element));
 
-            const follower = document.querySelector("#follower");
-            follower.appendChild(entity);
+            const marker = document.querySelector("a-marker");
+            marker.appendChild(entity);
           });
         }
       };
@@ -1045,39 +1045,6 @@
       }
     </script>
     <script>
-      AFRAME.registerComponent("markerhandler", {
-        init: function () {
-          this.p = new THREE.Vector3();
-          this.q = new THREE.Quaternion();
-          this.s = new THREE.Vector3();
-
-          let marker = this.el;
-          let follower = document.querySelector("#follower");
-
-          marker.addEventListener("markerFound", function () {
-            markerVisible = true;
-            follower.object3D.visible = true;
-          });
-
-          marker.addEventListener("markerLost", function () {
-            markerVisible = false;
-            follower.object3D.visible = false;
-            console.log("lost");
-          });
-        },
-
-        tick: function (time, deltaTime) {
-          let marker = this.el;
-          let follower = document.querySelector("#follower");
-
-          marker.object3D.getWorldPosition(this.p);
-          marker.object3D.getWorldQuaternion(this.q);
-          marker.object3D.getWorldScale(this.s);
-
-          follower.object3D.position.lerp(this.p, 1);
-        },
-      });
-
       AFRAME.registerComponent("infocomponent", {
         schema: {
           link: { type: "string", default: "" },
@@ -1148,9 +1115,7 @@
           onclick="reloadPage()"
         />
       </div>
-      <div class="notification-message">
-        4 AR.js 3.4.7 A-Frame Version: 1.6.0
-      </div>
+      <div class="notification-message">AR.js 3.4.7 A-Frame Version: 1.6.0</div>
     </div>
     <a-scene
       embedded

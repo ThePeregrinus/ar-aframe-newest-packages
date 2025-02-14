@@ -4,23 +4,157 @@
   <!-- we import arjs version without NFT but with marker + location based support -->
   <script src="scripts/aframe-ar.js"></script>
   <link rel="import" href="../assets/index.css" />
+  <script>
+    AFRAME.registerComponent("infocomponent", {
+      schema: {
+        link: { type: "string", default: "" },
+        name: { type: "string", default: "herohoehero" },
+      },
+
+      init: function () {
+        console.log("init function:", this.el);
+      },
+      tick: function (time, timeDelta) {
+        let plane = this.el;
+        let camera = document.querySelector("[camera]");
+        var position = camera.object3D.rotation;
+        plane.object3D.lookAt(
+          new THREE.Vector3(position.x, position.y, position.z)
+        );
+        console.log("tick");
+      },
+    });
+  </script>
 
   <body>
-    <a-scene
-      embedded
-    >
+    <a-scene embedded>
       <a-marker preset="hiro">
-        <a-box
-          position="0 0.5 0"
-          material="opacity: 0.5; side: double;color:blue;"
-        >
-          <a-torus-knot
-            radius="0.26"
-            radius-tubular="0.05"
-            animation="property: rotation; to:360 0 0; dur: 5000; easing: linear; loop: true"
-          >
-          </a-torus-knot>
-        </a-box>
+        <a-entity
+          rotation="-90 180 0"
+          position="-1.400 2.100 -0.250"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="-0.150 5.500 -8.450"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="5.040 0.000 6.000"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="8.530 1.100 -10.000"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="5.320 0.000 0.380"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="-3.220 4.550 -0.330"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="-2.440 6.240 -7.800"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="-7.800 4.630 2.560"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="3.550 4.300 -9.420"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="-0.250 5.100 -7.900"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="10.000 -6.590 -3.350"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="5.470 2.460 -8.850"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="8.420 0.670 -9.450"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="1.400 0.780 2.400"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="12.860 -1.800 -10.820"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="10.000 -9.390 3.260"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="-5.680 4.300 0.790"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity
+        ><a-entity
+          rotation="-90 180 0"
+          position="-1.490 0.250 1.560"
+          material="src: #info"
+          geometry="primitive: circle; radius: 0.2"
+          infocomponent
+        ></a-entity>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>

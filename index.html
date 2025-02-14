@@ -1,37 +1,221 @@
 <!DOCTYPE html>
 <html>
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-  <!-- we import arjs version without NFT but with marker + location based support -->
-  <script src="scripts/aframe-ar.js"></script>
-  <link rel="import" href="../assets/index.css" />
-  <script>
-    AFRAME.registerComponent("infocomponent", {
-      schema: {
-        link: { type: "string", default: "" },
-        name: { type: "string", default: "herohoehero" },
-      },
+  <head>
+    <link rel="stylesheet" href="styles/phone-alert.css" />
+    <link rel="stylesheet" href="styles/ar.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Manrope"
+      rel="stylesheet"
+    />
+    <script src="./scripts/aframe-min.js"></script>
+    <script src="./scripts/aframe-ar.js"></script>
+    <script>
+      function isIphone() {
+        return /iPhone/.test(navigator.userAgent) && !window.MSStream;
+      }
 
-      init: function () {
-        console.log("init function:", this.el);
-      },
-      tick: function (time, timeDelta) {
-        let plane = this.el;
-        let camera = document.querySelector("[camera]");
-        var position = camera.object3D.rotation;
-        plane.object3D.lookAt(
-          new THREE.Vector3(position.x, position.y, position.z)
+      window.onload = function () {
+        if (isIphone()) {
+          document.querySelector(".fullscreen").style.display = "none";
+        }
+
+        const marker = document.querySelector("a-marker");
+        const notificationMessage = document.querySelector(
+          ".notification-message"
         );
-        console.log("tick");
-      },
-    });
-  </script>
 
-  <body>
-    <a-scene embedded>
+        marker.addEventListener("markerFound", (e) => {
+          marker.setAttribute("found", true);
+        });
+
+        marker.addEventListener("markerLost", (e) => {
+          marker.setAttribute("found", false);
+        });
+      };
+
+      function closeModal() {
+        const modal = (document.querySelector(".wrapper").style.display =
+          "none");
+
+        document
+          .querySelectorAll(".main-content-items")
+          .forEach((elem) => elem.parentNode.removeChild(elem));
+
+        [...document.querySelector(".tabs").childNodes].forEach((e) =>
+          e.remove()
+        );
+
+        const toolsBtns = document.querySelector(".modal-tools-button");
+        while (toolsBtns.firstChild) {
+          toolsBtns.removeChild(toolsBtns.firstChild);
+        }
+      }
+
+      function reloadPage() {
+        location.reload();
+      }
+
+      function toogleFullScreen(isModal = false) {
+        const icon = document.getElementById("fullscreen-btn");
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+          icon.src = "./assets/tools-windowed.svg";
+
+          if (isModal) {
+            modalIcon = document.querySelector(".modal-fullscreen-btn");
+            modalIcon.src = "./assets/modal-windowed.svg";
+          }
+        } else if (document.exitFullscreen) {
+          document.exitFullscreen();
+          icon.src = "./assets/tools-fullscreen.svg";
+
+          if (isModal) {
+            modalIcon = document.querySelector(".modal-fullscreen-btn");
+            modalIcon.src = "./assets/modal-fullscren.svg";
+          }
+        }
+      }
+
+      function returnBack() {
+        window.location.href = endpoint;
+      }
+    </script>
+    <script>
+      function debounce(func, wait) {
+        console.log("wait", wait);
+        let timeout;
+
+        const debounced = function (...args) {
+          const context = this;
+
+          clearTimeout(timeout);
+
+          timeout = setTimeout(() => {
+            func.apply(context, args);
+          }, wait);
+        };
+
+        debounced.cancel = function () {
+          clearTimeout(timeout);
+        };
+
+        debounced.flush = function () {
+          if (timeout) {
+            clearTimeout(timeout);
+            func.apply(this, arguments);
+          }
+        };
+
+        return debounced;
+      }
+
+      const hide = () => {
+        follower.object3D.visible = true;
+      };
+
+      decouncedHide = debounce(hide, 500);
+
+      AFRAME.registerComponent("markerhandler", {
+        init: function () {
+          this.p = new THREE.Vector3();
+          this.q = new THREE.Quaternion();
+          this.s = new THREE.Vector3();
+
+          let marker = this.el;
+          let follower = document.querySelector("#follower");
+
+          marker.addEventListener("markerFound", function () {
+            markerVisible = true;
+            decouncedHide();
+          });
+
+          marker.addEventListener("markerLost", function () {
+            markerVisible = false;
+            follower.object3D.visible = false;
+            decouncedHide.cancel();
+          });
+        },
+
+        tick: function (time, deltaTime) {
+          let marker = this.el;
+          let follower = document.querySelector("#follower");
+
+          marker.object3D.getWorldPosition(this.p);
+          marker.object3D.getWorldQuaternion(this.q);
+          marker.object3D.getWorldScale(this.s);
+
+          follower.object3D.position.lerp(this.p, 1);
+          follower.object3D.quaternion.slerp(this.q, 0.025);
+          follower.object3D.scale.lerp(this.s, 0.025);
+        },
+      });
+
+      AFRAME.registerComponent("infocomponent", {
+        schema: {
+          link: { type: "string", default: "" },
+          name: { type: "string", default: "herohoehero" },
+        },
+
+        init: function () {
+          console.log("init function:", this.el);
+        },
+        tick: function (time, timeDelta) {
+          let plane = this.el;
+          let camera = document.querySelector("[camera]");
+          var position = camera.object3D.rotation;
+          plane.object3D.lookAt(
+            new THREE.Vector3(position.x, position.y, position.z)
+          );
+        },
+      });
+    </script>
+  </head>
+  <body style="margin: 0px; overflow: hidden">
+    <a-scene
+      embedded
+      arjs="trackingMethod: best; sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;"
+      cursor="fuse: false; rayOrigin: mouse;"
+      vr-mode-ui="enabled: false"
+    >
       <a-assets>
         <img id="info" src="info.png" alt="info" />
       </a-assets>
-      <a-marker preset="hiro">
+
+      <a-marker
+        found="false"
+        preset="custom"
+        type="pattern"
+        url="marker.patt"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+        markerhandler
+        size="1"
+        smooth="true"
+        smoothCount="5"
+        smoothTolerance="0.05"
+        smoothThreshold="5"
+      >
+      </a-marker>
+
+      <!-- <a-marker
+        found="false"
+        preset="hiro"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+        markerhandler
+        size="1"
+        smooth="true"
+        smoothCount="5"
+        smoothTolerance="0.05"
+        smoothThreshold="5"
+      >
+      </a-marker> -->
+
+      <a-entity id="follower">
         <a-entity
           rotation="-90 180 0"
           position="-1.400 2.100 -0.250"
@@ -158,7 +342,7 @@
           geometry="primitive: circle; radius: 0.2"
           infocomponent
         ></a-entity>
-      </a-marker>
+      </a-entity>
       <a-entity camera></a-entity>
     </a-scene>
   </body>

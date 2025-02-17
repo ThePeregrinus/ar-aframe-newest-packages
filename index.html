@@ -3,118 +3,9 @@
   <head>
     <link rel="stylesheet" href="styles/phone-alert.css" />
     <link rel="stylesheet" href="styles/ar.css" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Manrope"
-      rel="stylesheet"
-    />
     <script src="./scripts/aframe-min.js"></script>
     <script src="./scripts/aframe-ar.js"></script>
     <script>
-      function isIphone() {
-        return /iPhone/.test(navigator.userAgent) && !window.MSStream;
-      }
-
-      window.onload = function () {
-        if (isIphone()) {
-          document.querySelector(".fullscreen").style.display = "none";
-        }
-
-        const marker = document.querySelector("a-marker");
-        const notificationMessage = document.querySelector(
-          ".notification-message"
-        );
-
-        marker.addEventListener("markerFound", (e) => {
-          marker.setAttribute("found", true);
-        });
-
-        marker.addEventListener("markerLost", (e) => {
-          marker.setAttribute("found", false);
-        });
-      };
-
-      function closeModal() {
-        const modal = (document.querySelector(".wrapper").style.display =
-          "none");
-
-        document
-          .querySelectorAll(".main-content-items")
-          .forEach((elem) => elem.parentNode.removeChild(elem));
-
-        [...document.querySelector(".tabs").childNodes].forEach((e) =>
-          e.remove()
-        );
-
-        const toolsBtns = document.querySelector(".modal-tools-button");
-        while (toolsBtns.firstChild) {
-          toolsBtns.removeChild(toolsBtns.firstChild);
-        }
-      }
-
-      function reloadPage() {
-        location.reload();
-      }
-
-      function toogleFullScreen(isModal = false) {
-        const icon = document.getElementById("fullscreen-btn");
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen();
-          icon.src = "./assets/tools-windowed.svg";
-
-          if (isModal) {
-            modalIcon = document.querySelector(".modal-fullscreen-btn");
-            modalIcon.src = "./assets/modal-windowed.svg";
-          }
-        } else if (document.exitFullscreen) {
-          document.exitFullscreen();
-          icon.src = "./assets/tools-fullscreen.svg";
-
-          if (isModal) {
-            modalIcon = document.querySelector(".modal-fullscreen-btn");
-            modalIcon.src = "./assets/modal-fullscren.svg";
-          }
-        }
-      }
-
-      function returnBack() {
-        window.location.href = endpoint;
-      }
-    </script>
-    <script>
-      function debounce(func, wait) {
-        console.log("wait", wait);
-        let timeout;
-
-        const debounced = function (...args) {
-          const context = this;
-
-          clearTimeout(timeout);
-
-          timeout = setTimeout(() => {
-            func.apply(context, args);
-          }, wait);
-        };
-
-        debounced.cancel = function () {
-          clearTimeout(timeout);
-        };
-
-        debounced.flush = function () {
-          if (timeout) {
-            clearTimeout(timeout);
-            func.apply(this, arguments);
-          }
-        };
-
-        return debounced;
-      }
-
-      const hide = () => {
-        follower.object3D.visible = true;
-      };
-
-      decouncedHide = debounce(hide, 500);
-
       AFRAME.registerComponent("markerhandler", {
         init: function () {
           this.p = new THREE.Vector3();
@@ -126,13 +17,12 @@
 
           marker.addEventListener("markerFound", function () {
             markerVisible = true;
-            decouncedHide();
+            follower.object3D.visible = true;
           });
 
           marker.addEventListener("markerLost", function () {
             markerVisible = false;
             follower.object3D.visible = false;
-            decouncedHide.cancel();
           });
         },
 
@@ -153,7 +43,7 @@
       AFRAME.registerComponent("infocomponent", {
         schema: {
           link: { type: "string", default: "" },
-          name: { type: "string", default: "herohoehero" },
+          name: { type: "string", default: "" },
         },
 
         init: function () {
@@ -181,7 +71,7 @@
         <img id="info" src="info.png" alt="info" />
       </a-assets>
 
-      <a-marker
+      <!-- <a-marker
         found="false"
         preset="custom"
         type="pattern"
@@ -197,9 +87,9 @@
         smoothTolerance="0.05"
         smoothThreshold="5"
       >
-      </a-marker>
+      </a-marker> -->
 
-      <!-- <a-marker
+      <a-marker
         found="false"
         preset="hiro"
         raycaster="objects: .clickable"
@@ -213,7 +103,7 @@
         smoothTolerance="0.05"
         smoothThreshold="5"
       >
-      </a-marker> -->
+      </a-marker>
 
       <a-entity id="follower">
         <a-entity

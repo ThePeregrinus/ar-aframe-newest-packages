@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>AR JS</title>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1.6.0/dist/aframe-master.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script>
+      // Отображение кнопок при видимости маркера
+      AFRAME.registerComponent('markerhandler', {
+        init: function () 
+        {
+          this.p = new THREE.Vector3();
+          this.q = new THREE.Quaternion();
+          this.s = new THREE.Vector3();
+          
+          let marker = this.el;
+          let follower = document.querySelector("#follower");
+          
+          marker.addEventListener('markerFound', function() {
+            follower.object3D.visible = true
+          });
+
+          marker.addEventListener('markerLost', function() {
+            follower.object3D.visible = false;
+          });
+        },
+
+        tick: function (time, deltaTime)
+        {
+          let marker = this.el;
+          let follower = document.querySelector("#follower");
+
+          marker.object3D.getWorldPosition(this.p);
+          marker.object3D.getWorldQuaternion(this.q);
+          marker.object3D.getWorldScale(this.s);
+
+          follower.object3D.position.lerp(this.p, 1);
+          follower.object3D.quaternion.slerp(this.q, 0.025);
+          follower.object3D.scale.lerp(this.s, 0.025);
+        }
+      });
+      
+      // Ориентирование на камеру
+      AFRAME.registerComponent('plane', {
+        tick: function (time, timeDelta) 
+        {
+          let plane = this.el;
+          let camera = document.querySelector("[camera]");
+          var position = camera.object3D.position;
+          plane.object3D.lookAt(new THREE.Vector3(position.x, position.y, position.z));
+        }
+      });
+    </script>    
+  </head>
+  <body style="margin : 0px; overflow: hidden;">
+    <a-scene
+      vr-mode-ui="enabled: false;"
+      renderer="logarithmicDepthBuffer: true; precision: medium;"
+      arjs="trackingMethod: best; debugUIEnabled: false; patternRatio: 0.5;"
+      embedded>
+      
+      <a-assets>
+		    <img id="texture" src="https://cdn.glitch.global/0bc8bda7-0831-40e4-a2a2-837437e6b6f4/znak.png?v=1730364351754" />
+	    </a-assets>
+      
+      <a-marker
+        id="marker"
+        type =' pattern '
+        url =' https://cdn.glitch.global/0bc8bda7-0831-40e4-a2a2-837437e6b6f4/pattern-cat.patt?v=1729062454542 '
+        size="1"
+        smooth="true"
+        smoothCount="5"
+        smoothTolerance="0.05"
+        smoothThreshold="5"
+        markerhandler>
+      </a-marker>
+      
+      <!-- Группа с кнопками НЕ в теге "a-marker" -->
+      <a-entity id="follower">
+        <a-box position='0 0 0' material='opacity: 0.5;'></a-box>
+        <a-plane position ='2 0 0' material="src: #texture; transparent: true; opacity: 0.85;" plane></a-plane>
+        <a-plane position ='2 2 0' material="src: #texture; transparent: true; opacity: 0.85;" plane></a-plane>
+        <a-plane position ='0 0 0' material="src: #texture; transparent: true; opacity: 0.85;" plane></a-plane>
+        <a-plane position ='-3.26 4.49 -0.39' material="src: #texture; transparent: true; opacity: 0.85;" plane></a-plane>
+      </a-entity>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+  </body>
+</html>

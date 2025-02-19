@@ -37,14 +37,6 @@
   margin: auto;
 }
 
-@media (orientation: portrait) {
-  .wrapper-orientation-alert {
-    display: flex;
-  }
-  body > *:not(.wrapper-orientation-alert):not(.wrapper) {
-    filter: blur(18px);
-  }
-}
 
 @media screen and (max-width: 1280px) {
   .modal-alert {

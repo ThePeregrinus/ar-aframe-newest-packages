@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script>
+      function updateNotifications() {
+        const message = document.querySelector(".notification-message");
+        const currentOrientation = screen.orientation.type;
+
+        message.innerText = `Current orientation: ${currentOrientation} ${Date.now()}`; // Rewrite content
+      }
+
+      // Set an interval to update the notifications every 200 milliseconds
+      setInterval(updateNotifications, 200);
+    </script>
     <link rel="stylesheet" href="styles/phone-alert.css" />
     <link rel="stylesheet" href="styles/ar.css" />
     <script src="./scripts/aframe-min.js"></script>

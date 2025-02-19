@@ -185,11 +185,6 @@
   margin: 15px 20px;
 }
 
-@media (orientation: portrait) {
-  .notification-wrapper {
-    display: none;
-  }
-}
 @media screen and (max-width: 1400px) {
   .header-text {
     font-size: var(--fs-wxga);

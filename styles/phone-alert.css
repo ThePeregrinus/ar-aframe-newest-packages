@@ -38,16 +38,13 @@
 }
 
 
-@media (orientation: portrait) {
-  html {
-    transform: rotate(-90deg);
-    transform-origin: left top;
-    width: 100vh;
-    height: 100vw;
-    overflow-x: hidden;
-    position: absolute;
-    top: 100%;
-    left: 0;
+@media (orientation: landscape) {
+  .wrapper-orientation-alert {
+    display: flex;
+  }
+
+  body > *:not(.wrapper-orientation-alert):not(.wrapper) {
+    filter: blur(18px);
   }
 }
 
@@ -56,6 +53,7 @@
     gap: 0;
   }
 }
+
 
 @media screen and (max-width: 900px) {
   .phone-img img {
@@ -69,5 +67,11 @@
 
   .modal-alert-text {
     font-size: 20px;
+  }
+}
+
+@media screen and (max-height: 500px) {
+  .phone-img img {
+    height: 200px;
   }
 }

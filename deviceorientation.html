@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Device Motion Example</title>
+  </head>
+  <body>
+    <h1>Device Motion Data</h1>
+    <p id="acceleration"></p>
+    <p id="accelerationIncludingGravity"></p>
+    <p id="rotationRate"></p>
+    <p id="interval"></p>
+
+    <script>
+      if (window.DeviceMotionEvent) {
+        window.addEventListener("devicemotion", function (event) {
+          const acc = event.acceleration;
+          const accG = event.accelerationIncludingGravity;
+          const rot = event.rotationRate;
+
+          document.getElementById(
+            "acceleration"
+          ).innerText = `Acceleration - X: ${acc.x}, Y: ${acc.y}, Z: ${acc.z}`;
+          document.getElementById(
+            "accelerationIncludingGravity"
+          ).innerText = `Acceleration (including gravity) - X: ${accG.x}, Y: ${accG.y}, Z: ${accG.z}`;
+          document.getElementById(
+            "rotationRate"
+          ).innerText = `Rotation Rate - Alpha: ${rot.alpha}, Beta: ${rot.beta}, Gamma: ${rot.gamma}`;
+          document.getElementById(
+            "interval"
+          ).innerText = `Interval: ${event.interval}ms`;
+        });
+      } else {
+        alert("Device Motion not supported on your device.");
+      }
+    </script>
+  </body>
+</html>

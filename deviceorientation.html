@@ -23,8 +23,26 @@
         border-radius: 100%;
       }
     </style>
+    <script>
+      const handleClick = () => {
+        if (typeof DeviceMotionEvent.requestPermission === "function") {
+          // iOS 13+
+          DeviceOrientationEvent.requestPermission()
+            .then((response) => {
+              if (response == "granted") {
+                window.addEventListener("deviceorientation", handleOrientation);
+              }
+            })
+            .catch(console.error);
+        } else {
+          // non iOS 13+
+          window.addEventListener("deviceorientation", handleOrientation);
+        }
+      };
+    </script>
   </head>
   <body>
+    <button onclick="handleClick()">require a user gesture to prompt</button>
     <div class="garden">
       <div class="ball"></div>
     </div>
@@ -64,20 +82,6 @@
         // It centers the positioning point to the center of the ball
         ball.style.left = `${(maxY * y) / 180 - 10}px`; // rotating device around the y axis moves the ball horizontally
         ball.style.top = `${(maxX * x) / 180 - 10}px`; // rotating device around the x axis moves the ball vertically
-      }
-
-      if (typeof DeviceMotionEvent.requestPermission === "function") {
-        // iOS 13+
-        DeviceOrientationEvent.requestPermission()
-          .then((response) => {
-            if (response == "granted") {
-              window.addEventListener("deviceorientation", handleOrientation);
-            }
-          })
-          .catch(console.error);
-      } else {
-        // non iOS 13+
-        window.addEventListener("deviceorientation", handleOrientation);
       }
     </script>
   </body>

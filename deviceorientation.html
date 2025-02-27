@@ -14,10 +14,16 @@
         font-size: 24px;
         margin-top: 20px;
       }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
     <h1>Gyroscope Sensor Data</h1>
+    <button id="startButton">Start Gyroscope</button>
     <div id="sensorData">
       <p>X: <span id="x">0</span> rad/s</p>
       <p>Y: <span id="y">0</span> rad/s</p>
@@ -25,22 +31,24 @@
     </div>
 
     <script>
-      // Check if Gyroscope API is supported
-      if ("Gyroscope" in window) {
-        const gyroscope = new Gyroscope({ frequency: 60 });
+      let gyroscope;
 
-        gyroscope.addEventListener("reading", (event) => {
-          // Update the display with the gyroscope data
-          document.getElementById("x").innerText = gyroscope.x.toFixed(2);
-          document.getElementById("y").innerText = gyroscope.y.toFixed(2);
-          document.getElementById("z").innerText = gyroscope.z.toFixed(2);
-        });
+      document.getElementById("startButton").addEventListener("click", () => {
+        if ("Gyroscope" in window) {
+          gyroscope = new Gyroscope({ frequency: 60 });
 
-        // Start the gyroscope sensor
-        gyroscope.start();
-      } else {
-        alert("Gyroscope sensor is not supported on your device or browser.");
-      }
+          gyroscope.addEventListener("reading", () => {
+            document.getElementById("x").innerText = gyroscope.x.toFixed(2);
+            document.getElementById("y").innerText = gyroscope.y.toFixed(2);
+            document.getElementById("z").innerText = gyroscope.z.toFixed(2);
+          });
+
+          gyroscope.start();
+          document.getElementById("startButton").disabled = true;
+        } else {
+          alert("Gyroscope sensor is not supported on your device or browser.");
+        }
+      });
     </script>
   </body>
 </html>
